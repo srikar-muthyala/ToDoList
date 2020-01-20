@@ -4,8 +4,11 @@ const ejs = require("ejs");
 
 const app = express();
 
-app.set('view engine', 'ejs');
+var items = ["buy food", "eat food"];
 
+app.use(bodyParser.urlencoded({extended:true}));
+
+app.set('view engine', 'ejs');
 
 
 app.get("/", function(req, res) {
@@ -15,11 +18,18 @@ app.get("/", function(req, res) {
     weekday: "long",
     day: "numeric",
     month: "long"
+
   };
 
   var day = today.toLocaleDateString("en-US",options);
 
-  res.render("list", {kindOfDay: day});
+  res.render("list", {kindOfDay: day, newListItems: items});
+});
+
+app.post("/",function(req,res){
+  var item = req.body.additem;
+  items.push(item);
+  res.redirect("/");
 });
 
 app.listen(3000, function() {
